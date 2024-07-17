@@ -7,17 +7,9 @@ namespace appf
     class Error
     {
     public:
-        Error(const std::string &msg) : message(msg) {}
-
-        const std::string &getMessage() const &
-        {
-            return message;
-        }
-
-        void spawnDialog() const
-        {
-            dialog::showError(getMessage());
-        }
+        Error(const std::string &msg);
+        const std::string &getMessage() const;
+        void spawnDialog() const;
 
     private:
         std::string message;
