@@ -4,4 +4,8 @@ body {
     color: #000000; 
 }
 
-
+html, body, div, canvas {
+    margin: 0;
+    padding: 0;
+  }
+  

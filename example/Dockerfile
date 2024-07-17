@@ -15,7 +15,8 @@ RUN apt-get update && \
         libsdl2-image-dev \
         libsdl2-ttf-dev \
         libsdl2-mixer-dev \
-        xz-utils
+        xz-utils \
+        python3
 
 RUN git clone https://github.com/emscripten-core/emsdk.git && \
     cd emsdk && \
@@ -28,4 +29,9 @@ RUN git clone https://github.com/emscripten-core/emsdk.git && \
 RUN emcmake cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN emmake make
 
+RUN mv ./* /usr/src/app/html
+WORKDIR /usr/src/app/html
+
+EXPOSE 8000
+CMD ["python3", "-m", "http.server", "8000"]
 
