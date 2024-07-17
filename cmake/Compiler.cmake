@@ -1,0 +1,13 @@
+
+if(EMSCRIPTEN)
+    set(CMAKE_C_COMPILER emcc)
+    set(CMAKE_CXX_COMPILER em++)
+elseif(UNIX)
+    find_program(CLANGXX_FOUND clang++)
+    if(CLANGXX_FOUND)
+        message(STATUS "Found clang++: ${CLANGXX_FOUND}")
+        set(CMAKE_CXX_COMPILER ${CLANGXX_FOUND})
+    else()
+        message(WARNING "clang++ not found in /usr/bin. Using default compiler.")
+    endif()
+endif()
