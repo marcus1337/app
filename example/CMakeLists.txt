@@ -47,6 +47,7 @@ if(EMSCRIPTEN)
     GIT_TAG dev
   )
   FetchContent_MakeAvailable(app)
+  list(APPEND EXTRA_LIBS app)
 else()
   add_subdirectory(${CMAKE_SOURCE_DIR}/.. ${CMAKE_BINARY_DIR}/app_build)
   list(APPEND EXTRA_LIBS app)
