@@ -1,12 +1,6 @@
 
-#file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
-#add_library(${PROJECT_NAME} ${SRC_FILES})
-#message("SRC FILES: ${SRC_FILES}")
-
-add_library(${PROJECT_NAME} 
-"src/app.cpp" 
-"src/error.cpp"
-"src/init.cpp")
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+add_library(${PROJECT_NAME} ${SRC_FILES})
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC
