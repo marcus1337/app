@@ -28,8 +28,17 @@ EMSCRIPTEN_BINDINGS(resize_module)
 
 int main(int argc, char *argv[])
 {
+
+    auto err = appf::ini::initAll();
+    if (err.has_value())
+    {
+        std::cerr << "ERROR: " << err.value().getMessage() << "\n";
+    }
+
 #ifdef EMSCRIPTEN
     emscripten_set_main_loop(step, 0, 1);
+#else
+    step();
 #endif
     return 0;
 }
