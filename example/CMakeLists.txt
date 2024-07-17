@@ -6,6 +6,8 @@ if(EMSCRIPTEN)
         set(CMAKE_C_COMPILER /home/zzz/code/tools/emsdk/upstream/emscripten/emcc)
         set(CMAKE_CXX_COMPILER /home/zzz/code/tools/emsdk/upstream/emscripten/em++)
     endif()
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s WASM=1 -s EXPORTED_FUNCTIONS='[\"_main\"]'")
 endif()
 
 add_executable(${PROJECT_NAME} "main.cpp")

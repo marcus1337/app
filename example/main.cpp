@@ -1,6 +1,10 @@
 #include "app.h"
+#include <emscripten.h>
 
-int main(int argc, char *argv[])
-{
-    std::cout << "Hello World example!\n";
+extern "C" {
+    EMSCRIPTEN_KEEPALIVE
+    int main() {
+        //std::cout << "Hello World WASM example!\n";
+        return 0;
+    }
 }
