@@ -53,8 +53,6 @@ else()
   list(APPEND EXTRA_LIBS app)
 endif()
 
-
-
 target_include_directories(${PROJECT_NAME}
   PUBLIC
     $<INSTALL_INTERFACE:include>
