@@ -10,15 +10,14 @@ namespace appf
     public:
         static void init();
         static void shutDown();
-        static AssetManager& instance();
+        static AssetManager &instance();
 
     private:
         AssetManager();
         ~AssetManager();
         AssetManager(const AssetManager &) = delete;
         AssetManager &operator=(const AssetManager &) = delete;
+        static inline AssetManager *assetManager = nullptr;
     };
-
-    inline AssetManager *assetManager;
 
 }
