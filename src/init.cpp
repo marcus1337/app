@@ -1,4 +1,5 @@
 #include "util/init.h"
+#include "asset_manager.h"
 
 namespace appf
 {
@@ -21,7 +22,15 @@ namespace appf
         {
             if (auto error = initSDL(); error.has_value())
                 return error;
+
+            AssetManager::init();
+
             return std::nullopt;
+        }
+
+        void shutDownAll()
+        {
+            AssetManager::shutDown();
         }
     }
 }

@@ -8,5 +8,6 @@ namespace appf
     {
         std::optional<Error> initSDL();
         std::optional<Error> initAll();
+        void shutDownAll();
     }
 }

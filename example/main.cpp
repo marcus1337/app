@@ -35,6 +35,8 @@ int main(int argc, char *argv[])
         std::cerr << "ERROR: " << err.value().getMessage() << "\n";
     }
 
+    appf::ini::shutDownAll();
+
 #ifdef EMSCRIPTEN
     emscripten_set_main_loop(step, 0, 1);
 #else
