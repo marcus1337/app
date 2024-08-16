@@ -12,16 +12,11 @@ namespace appf
     public:
         App()
         {
-            if (!ini::sdlInitialized)
+            if (initSDL())
             {
-                if (auto error = ini::initSDL(); error.has_value())
-                {
-                    std::cerr << error.value().getMessage() << "\n";
-                    return;
-                }
+                AssetManager::init();
+                initialized = true;
             }
-            AssetManager::init();
-            initialized = true;
         }
 
         ~App()
@@ -40,6 +35,19 @@ namespace appf
 
     private:
         bool initialized = false;
+
+        bool initSDL() const
+        {
+            if (!ini::sdlInitialized)
+            {
+                if (auto error = ini::initSDL(); error.has_value())
+                {
+                    std::cerr << error.value().getMessage() << "\n";
+                    return false;
+                }
+            }
+            return ini::sdlInitialized;
+        }
     };
 
 }
