@@ -31,7 +31,7 @@ AssetManager &AssetManager::instance()
 
 namespace fs = std::filesystem;
 
-std::optional<Error> AssetManager::load(const std::filesystem::path &dirPath)
+std::optional<Error> AssetManager::load(const fs::path &dirPath)
 {
     if (!fs::exists(dirPath) || !fs::is_directory(dirPath))
     {
@@ -49,8 +49,19 @@ std::optional<Error> AssetManager::load(const std::filesystem::path &dirPath)
     return std::nullopt;
 }
 
-std::optional<Error> AssetManager::loadFile(const std::filesystem::path &entry)
+void AssetManager::addPath(const fs::path &entry)
 {
+    const std::string& name = entry.filename();
+    if (!filepaths.contains(name))
+    {
+        filepaths[name] = std::vector<fs::path>();
+    }
+    filepaths[name].push_back(entry);
+}
+
+std::optional<Error> AssetManager::loadFile(const fs::path &entry)
+{
+    addPath(entry);
     std::string ext = entry.extension();
     if (ext == ".png")
     {

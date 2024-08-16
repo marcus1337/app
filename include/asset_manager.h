@@ -19,9 +19,12 @@ namespace appf
         ~AssetManager();
         AssetManager(const AssetManager &) = delete;
         AssetManager &operator=(const AssetManager &) = delete;
-        static inline AssetManager *assetManager = nullptr;
-
+        
         std::optional<Error> loadFile(const std::filesystem::path &entry);
+        void addPath(const std::filesystem::path &entry);
+
+        static inline AssetManager *assetManager = nullptr;
+        std::map<std::string, std::vector<std::filesystem::path>> filepaths;
     };
 
 }
