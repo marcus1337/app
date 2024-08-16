@@ -4,6 +4,10 @@ using namespace appf;
 
 void AssetManager::init()
 {
+    if (assetManager)
+    {
+        shutDown();
+    }
     assetManager = new AssetManager();
 }
 

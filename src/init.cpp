@@ -18,19 +18,5 @@ namespace appf
             return std::nullopt;
         }
 
-        std::optional<Error> initAll()
-        {
-            if (auto error = initSDL(); error.has_value())
-                return error;
-
-            AssetManager::init();
-
-            return std::nullopt;
-        }
-
-        void shutDownAll()
-        {
-            AssetManager::shutDown();
-        }
     }
 }

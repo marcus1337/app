@@ -4,7 +4,6 @@
 #include <emscripten/fetch.h>
 #include <emscripten/bind.h>
 #endif
-
 #include "app.h"
 
 void resizeWindow(int width, int height)
@@ -26,21 +25,21 @@ EMSCRIPTEN_BINDINGS(resize_module)
 }
 #endif
 
-int main(int argc, char *argv[])
+void start()
 {
-
-    auto err = appf::ini::initAll();
-    if (err.has_value())
-    {
-        std::cerr << "ERROR: " << err.value().getMessage() << "\n";
-    }
-
-    appf::ini::shutDownAll();
-
 #ifdef EMSCRIPTEN
     emscripten_set_main_loop(step, 0, 1);
 #else
     step();
 #endif
+}
+
+int main(int argc, char *argv[])
+{
+    appf::App app;
+    if (app.isIntialized())
+    {
+        start();
+    }
     return 0;
 }
