@@ -1,4 +1,6 @@
 #include "app.h"
+#include "util/init.h"
+#include "render/asset_manager.h"
 
 using namespace appf;
 

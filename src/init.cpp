@@ -1,5 +1,4 @@
 #include "util/init.h"
-#include "asset_manager.h"
 
 namespace appf
 {
