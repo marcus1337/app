@@ -1,4 +1,5 @@
 #include "render/asset_manager.h"
+#include "render/surface.h"
 
 using namespace appf;
 
@@ -59,22 +60,9 @@ void AssetManager::addPath(const fs::path &entry)
     filepaths[name].push_back(entry);
 }
 
-std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)> AssetManager::makeImageSurface(const std::filesystem::path &pngPath) const
-{
-    return std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)>(IMG_Load(pngPath.c_str()), &SDL_FreeSurface);
-}
-
-std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)> AssetManager::makeFont(const std::filesystem::path &ttfPath, int ptsize) const
-{
-    std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)> font(nullptr, &TTF_CloseFont);
-    font.reset(TTF_OpenFont(ttfPath.c_str(), ptsize));
-    assert(font != nullptr);
-    return font;
-}
-
 std::shared_ptr<SDL_Surface> AssetManager::getImageSurface(const File &file) const
 {
-    auto path = getPath(file);
+    auto path = file.getPath(filepaths);
     if (!imageSurfaces.contains(path))
     {
         return nullptr;
@@ -87,28 +75,13 @@ std::shared_ptr<TTF_Font> AssetManager::getFont(const FontSpec &fontSpec) const
     return fonts.contains(fontSpec) ? fonts.at(fontSpec) : nullptr;
 }
 
-std::filesystem::path AssetManager::getPath(const File &file) const
-{
-    if (filepaths.contains(file.name))
-    {
-        for (const auto &path : filepaths.at(file.name))
-        {
-            if (file.isMatch(path))
-            {
-                return path;
-            }
-        }
-    }
-    return "";
-}
-
 std::optional<Error> AssetManager::loadFile(const fs::path &entry)
 {
     addPath(entry);
     std::string ext = entry.extension();
     if (ext == ".png")
     {
-        imageSurfaces[entry.string()] = makeImageSurface(entry);
+        imageSurfaces[entry.string()] = surf::makeImageSurface(entry);
     }
     if (ext == ".wav")
     {
@@ -117,7 +90,7 @@ std::optional<Error> AssetManager::loadFile(const fs::path &entry)
     {
         for (const auto &fontSize : {FontSize::Small, FontSize::Medium, FontSize::Large})
         {
-            fonts[FontSpec{.filename = entry.filename(), .size = fontSize}] = makeFont(entry, static_cast<int>(fontSize));
+            fonts[FontSpec{.filename = entry.filename(), .size = fontSize}] = surf::makeFont(entry, static_cast<int>(fontSize));
         }
     }
     return std::nullopt;

@@ -1,6 +1,6 @@
 
 #pragma once
-#include "render/asset_manager.h"
+#include "util/pch.h"
 
 namespace appf
 {
@@ -8,12 +8,13 @@ namespace appf
     class TextureManager
     {
     public:
-        static TextureManager &instance();
-
-    private:
+        std::shared_ptr<SDL_Texture> getTexture(const std::string &name) const;
+        void makeCustomSurface(const std::string &name, int w, int h);
+        std::shared_ptr<SDL_Surface> getCustomSurface(const std::string &name) const;
         TextureManager();
         ~TextureManager();
-        TextureManager(const TextureManager &) = delete;
-        TextureManager &operator=(const TextureManager &) = delete;
+
+    private:
+        std::map<std::string, std::shared_ptr<SDL_Surface>> customSurfaces;
     };
 }

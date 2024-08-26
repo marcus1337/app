@@ -5,9 +5,14 @@
 #include "util/file.h"
 #include "render/text_spec.h"
 
+/*
+AssetManager;
+Manages the lifecycle of various asset types (e.g., images, sounds, fonts) by loading them from disk and 
+providing centralized access for other components.
+*/
+
 namespace appf
 {
-
     class AssetManager
     {
     public:
@@ -26,12 +31,8 @@ namespace appf
         AssetManager(const AssetManager &) = delete;
         AssetManager &operator=(const AssetManager &) = delete;
 
-        std::filesystem::path getPath(const File &file) const;
         std::optional<Error> loadFile(const std::filesystem::path &entry);
         void addPath(const std::filesystem::path &entry);
-        std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)> makeImageSurface(const std::filesystem::path &pngPath) const;
-        std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)> makeFont(const std::filesystem::path &ttfPath, int ptsize) const;
-
         std::shared_ptr<TTF_Font> getFont(const FontSpec &fontSpec) const;
 
         static inline AssetManager *assetManager = nullptr;

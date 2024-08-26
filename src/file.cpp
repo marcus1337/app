@@ -28,3 +28,18 @@ bool File::isMatch(const std::filesystem::path &path) const
 {
     return hasMatchingUpperDirs(path) && path.filename() == name;
 }
+
+std::filesystem::path File::getPath(const std::map<std::string, std::vector<std::filesystem::path>> &filepaths) const
+{
+    if (filepaths.contains(name))
+    {
+        for (const auto &path : filepaths.at(name))
+        {
+            if (isMatch(path))
+            {
+                return path;
+            }
+        }
+    }
+    return "";
+}
