@@ -1,5 +1,6 @@
 #pragma once
 #include "util/pch.h"
+#include "render/asset_manager.h"
 
 // appf is shorthand for "app framework"
 namespace appf
