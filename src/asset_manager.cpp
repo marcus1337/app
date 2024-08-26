@@ -64,9 +64,27 @@ std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)> AssetManager::makeImage
     return std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)>(IMG_Load(pngPath.c_str()), &SDL_FreeSurface);
 }
 
+std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)> AssetManager::makeFont(const std::filesystem::path &ttfPath, int ptsize) const
+{
+    std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)> font(nullptr, &TTF_CloseFont);
+    font.reset(TTF_OpenFont(ttfPath.c_str(), ptsize));
+    assert(font != nullptr);
+    return font;
+}
+
 std::shared_ptr<SDL_Surface> AssetManager::getImageSurface(const File &file) const
 {
-    return imageSurfaces.at(getPath(file));
+    auto path = getPath(file);
+    if (!imageSurfaces.contains(path))
+    {
+        return nullptr;
+    }
+    return imageSurfaces.at(path);
+}
+
+std::shared_ptr<TTF_Font> AssetManager::getFont(const FontSpec &fontSpec) const
+{
+    return fonts.contains(fontSpec) ? fonts.at(fontSpec) : nullptr;
 }
 
 std::filesystem::path AssetManager::getPath(const File &file) const
@@ -97,6 +115,10 @@ std::optional<Error> AssetManager::loadFile(const fs::path &entry)
     }
     if (ext == ".ttf")
     {
+        for (const auto &fontSize : {FontSize::Small, FontSize::Medium, FontSize::Large})
+        {
+            fonts[FontSpec{.filename = entry.filename(), .size = fontSize}] = makeFont(entry, static_cast<int>(fontSize));
+        }
     }
     return std::nullopt;
 }
