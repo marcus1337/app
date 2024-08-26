@@ -7,12 +7,13 @@
 
 /*
 AssetManager;
-Manages the lifecycle of various asset types (e.g., images, sounds, fonts) by loading them from disk and 
+Manages the lifecycle of various asset types (e.g., images, sounds, fonts) by loading them from disk and
 providing centralized access for other components.
 */
 
 namespace appf
 {
+
     class AssetManager
     {
     public:
@@ -36,7 +37,7 @@ namespace appf
         std::shared_ptr<TTF_Font> getFont(const FontSpec &fontSpec) const;
 
         static inline AssetManager *assetManager = nullptr;
-        std::map<std::string, std::vector<std::filesystem::path>> filepaths;
+        std::multimap<std::string, std::filesystem::path> filepaths;
         std::map<std::filesystem::path, std::shared_ptr<SDL_Surface>> imageSurfaces;
         std::map<FontSpec, std::shared_ptr<TTF_Font>> fonts;
         std::map<TextSpec, std::shared_ptr<SDL_Surface>> textSurfaces;

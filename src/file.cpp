@@ -11,11 +11,10 @@ File::File(const std::vector<std::string> &upperDirs, const std::string &filenam
 
 bool File::hasMatchingUpperDirs(const std::filesystem::path &path) const
 {
-    auto counter = upperDirs.size();
     auto tmpPath = path;
-    while (counter-- > 0)
+    for (auto it = upperDirs.rbegin(); it != upperDirs.rend(); ++it)
     {
-        if (!tmpPath.has_parent_path() || tmpPath.parent_path().filename() != upperDirs[counter])
+        if (!tmpPath.has_parent_path() || tmpPath.parent_path().filename() != *it)
         {
             return false;
         }
@@ -24,22 +23,15 @@ bool File::hasMatchingUpperDirs(const std::filesystem::path &path) const
     return true;
 }
 
-bool File::isMatch(const std::filesystem::path &path) const
+std::filesystem::path File::getPath(const std::multimap<std::string, std::filesystem::path> &filepaths) const
 {
-    return hasMatchingUpperDirs(path) && path.filename() == name;
-}
-
-std::filesystem::path File::getPath(const std::map<std::string, std::vector<std::filesystem::path>> &filepaths) const
-{
-    if (filepaths.contains(name))
+    auto range = filepaths.equal_range(name);
+    for (auto it = range.first; it != range.second; ++it)
     {
-        for (const auto &path : filepaths.at(name))
+        if (hasMatchingUpperDirs(it->second))
         {
-            if (isMatch(path))
-            {
-                return path;
-            }
+            return it->second;
         }
     }
-    return "";
+    return {};
 }

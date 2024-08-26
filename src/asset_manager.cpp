@@ -52,12 +52,7 @@ std::optional<Error> AssetManager::loadAssets(const fs::path &dirPath)
 
 void AssetManager::addPath(const fs::path &entry)
 {
-    const std::string &name = entry.filename();
-    if (!filepaths.contains(name))
-    {
-        filepaths[name] = std::vector<fs::path>();
-    }
-    filepaths[name].push_back(entry);
+    filepaths.insert({entry.filename(), entry});
 }
 
 std::shared_ptr<SDL_Surface> AssetManager::getImageSurface(const File &file) const
