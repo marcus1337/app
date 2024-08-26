@@ -122,3 +122,27 @@ std::optional<Error> AssetManager::loadFile(const fs::path &entry)
     }
     return std::nullopt;
 }
+
+std::optional<Error> AssetManager::storeTextSurface(const TextSpec &textSpec)
+{
+    std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)> surface(nullptr, &SDL_FreeSurface);
+    auto font = getFont(textSpec.fontSpec);
+    assert(font != nullptr);
+    if (font == nullptr)
+    {
+        return Error("Font not found");
+    }
+    surface.reset(TTF_RenderText_Blended(font.get(), textSpec.text.data(), textSpec.color));
+    assert(surface != nullptr);
+    if (surface == nullptr)
+    {
+        return Error("Surface creation failed.");
+    }
+    textSurfaces[textSpec] = std::move(surface);
+    return std::nullopt;
+}
+
+std::shared_ptr<SDL_Surface> AssetManager::getTextSurface(const TextSpec &textSpec) const
+{
+    return textSurfaces.contains(textSpec) ? textSurfaces.at(textSpec) : nullptr;
+}

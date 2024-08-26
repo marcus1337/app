@@ -28,6 +28,19 @@ namespace appf
         }
     };
 
+    struct TextSpec
+    {
+        std::string text;
+        SDL_Color color;
+        FontSpec fontSpec;
+
+        bool operator<(const TextSpec &other) const
+        {
+            return std::tie(text, color.r, color.g, color.b, color.a, fontSpec) <
+                   std::tie(other.text, other.color.r, other.color.g, other.color.b, other.color.a, other.fontSpec);
+        }
+    };
+
     class AssetManager
     {
     public:
@@ -37,7 +50,8 @@ namespace appf
         std::optional<Error> loadAssets(const std::filesystem::path &dirPath);
 
         std::shared_ptr<SDL_Surface> getImageSurface(const File &file) const;
-        std::shared_ptr<TTF_Font> getFont(const FontSpec &fontSpec) const;
+        std::optional<Error> storeTextSurface(const TextSpec &textSpec);
+        std::shared_ptr<SDL_Surface> getTextSurface(const TextSpec &textSpec) const;
 
     private:
         AssetManager();
@@ -51,10 +65,12 @@ namespace appf
         std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)> makeImageSurface(const std::filesystem::path &pngPath) const;
         std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)> makeFont(const std::filesystem::path &ttfPath, int ptsize) const;
 
+        std::shared_ptr<TTF_Font> getFont(const FontSpec &fontSpec) const;
+
         static inline AssetManager *assetManager = nullptr;
         std::map<std::string, std::vector<std::filesystem::path>> filepaths;
         std::map<std::filesystem::path, std::shared_ptr<SDL_Surface>> imageSurfaces;
         std::map<FontSpec, std::shared_ptr<TTF_Font>> fonts;
+        std::map<TextSpec, std::shared_ptr<SDL_Surface>> textSurfaces;
     };
-
 }
