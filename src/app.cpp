@@ -1,6 +1,5 @@
 #include "app.h"
 #include "util/init.h"
-#include "render/asset_manager.h"
 
 using namespace appf;
 
@@ -8,14 +7,14 @@ App::App()
 {
     if (initSDL())
     {
-        AssetManager::init();
+        AssetHandle::init();
         initialized = true;
     }
 }
 
 App::~App()
 {
-    AssetManager::shutDown();
+    AssetHandle::shutDown();
     if (ini::sdlInitialized)
     {
         ini::quitSDL();

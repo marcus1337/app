@@ -1,44 +1,20 @@
-#include "render/asset_manager.h"
+#include "render/asset_registry.h"
 #include "render/surface.h"
 
 using namespace appf;
 
-void AssetManager::init()
-{
-    if (assetManager)
-    {
-        shutDown();
-    }
-    assetManager = new AssetManager();
-}
-
-void AssetManager::shutDown()
-{
-    delete assetManager;
-    assetManager = nullptr;
-}
-
-AssetManager::AssetManager()
-{
-}
-AssetManager::~AssetManager()
-{
-}
-
-AssetManager &AssetManager::instance()
-{
-    return *assetManager;
-}
-
-namespace fs = std::filesystem;
-
-std::optional<Error> AssetManager::loadAssets(const fs::path &dirPath)
-{
+/*
     if (!fs::exists(dirPath) || !fs::is_directory(dirPath))
     {
         return Error("Invalid path " + dirPath.string());
     }
+*/
 
+
+namespace fs = std::filesystem;
+
+void AssetRegistry::loadFiles(const fs::path &dirPath)
+{
     for (const auto &entry : fs::recursive_directory_iterator(dirPath))
     {
         if (fs::is_regular_file(entry))
@@ -46,16 +22,14 @@ std::optional<Error> AssetManager::loadAssets(const fs::path &dirPath)
             loadFile(entry);
         }
     }
-
-    return std::nullopt;
 }
 
-void AssetManager::addPath(const fs::path &entry)
+void AssetRegistry::addPath(const fs::path &entry)
 {
     filepaths.insert({entry.filename(), entry});
 }
 
-std::shared_ptr<SDL_Surface> AssetManager::getImageSurface(const File &file) const
+std::shared_ptr<SDL_Surface> AssetRegistry::getImageSurface(const File &file) const
 {
     auto path = file.getPath(filepaths);
     if (!assetData.imageData.imageSurfaces.contains(path))
@@ -65,7 +39,7 @@ std::shared_ptr<SDL_Surface> AssetManager::getImageSurface(const File &file) con
     return assetData.imageData.imageSurfaces.at(path);
 }
 
-bool AssetManager::loadFile(const fs::path &entry)
+bool AssetRegistry::loadFile(const fs::path &entry)
 {
     if (assetData.loadFile(entry))
     {
@@ -75,7 +49,7 @@ bool AssetManager::loadFile(const fs::path &entry)
     return false;
 }
 
-std::optional<Error> AssetManager::storeTextSurface(const TextSpec &textSpec)
+std::optional<Error> AssetRegistry::storeTextSurface(const TextSpec &textSpec)
 {
     std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)> surface(nullptr, &SDL_FreeSurface);
     auto font = assetData.textData.getFont(textSpec.fontSpec);
@@ -94,7 +68,7 @@ std::optional<Error> AssetManager::storeTextSurface(const TextSpec &textSpec)
     return std::nullopt;
 }
 
-std::shared_ptr<SDL_Surface> AssetManager::getTextSurface(const TextSpec &textSpec) const
+std::shared_ptr<SDL_Surface> AssetRegistry::getTextSurface(const TextSpec &textSpec) const
 {
     return assetData.textData.getTextSurface(textSpec);
 }
