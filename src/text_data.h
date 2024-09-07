@@ -3,6 +3,10 @@
 
 using namespace appf;
 
+TextData::TextData() : FileData({".ttf"})
+{
+}
+
 std::shared_ptr<TTF_Font> TextData::getFont(const FontSpec &fontSpec) const
 {
     return fonts.contains(fontSpec) ? fonts.at(fontSpec) : nullptr;

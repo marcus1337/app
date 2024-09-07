@@ -8,6 +8,7 @@ namespace appf
 {
     struct TextData : public FileData
     {
+        TextData();
         std::map<FontSpec, std::shared_ptr<TTF_Font>> fonts;
         std::map<TextSpec, std::shared_ptr<SDL_Surface>> textSurfaces;
         std::shared_ptr<TTF_Font> getFont(const FontSpec &fontSpec) const;

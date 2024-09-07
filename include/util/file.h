@@ -6,8 +6,13 @@ namespace appf
     class FileData
     {
     public:
+        FileData(std::set<std::string> extensions);
+        virtual ~FileData() = default;
         virtual void loadFile(const std::filesystem::path &entry) = 0;
+        bool canLoadFile(const std::filesystem::path &entry) const;
+
     private:
+        std::set<std::string> extensions;
     };
 
     struct File

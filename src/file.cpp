@@ -2,6 +2,13 @@
 
 using namespace appf;
 
+FileData::FileData(std::set<std::string> extensions) : extensions(extensions) {}
+
+bool FileData::canLoadFile(const std::filesystem::path &entry) const
+{
+    return extensions.contains(entry.extension());
+}
+
 File::File(const std::string &filename) : name(filename)
 {
 }

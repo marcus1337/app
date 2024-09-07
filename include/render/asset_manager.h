@@ -1,10 +1,6 @@
 
 #pragma once
-#include "util/pch.h"
-#include "util/error.h"
-#include "util/file.h"
-#include "render/text_spec.h"
-#include "render/text_data.h"
+#include "render/asset_data.h"
 
 /*
 AssetManager;
@@ -32,12 +28,11 @@ namespace appf
         AssetManager(const AssetManager &) = delete;
         AssetManager &operator=(const AssetManager &) = delete;
 
-        std::optional<Error> loadFile(const std::filesystem::path &entry);
+        bool loadFile(const std::filesystem::path &entry);
         void addPath(const std::filesystem::path &entry);
 
         static inline AssetManager *assetManager = nullptr;
         std::multimap<std::string, std::filesystem::path> filepaths;
-        std::map<std::filesystem::path, std::shared_ptr<SDL_Surface>> imageSurfaces;
-        TextData textData;
+        AssetData assetData;
     };
 }

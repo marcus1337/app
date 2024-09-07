@@ -58,35 +58,27 @@ void AssetManager::addPath(const fs::path &entry)
 std::shared_ptr<SDL_Surface> AssetManager::getImageSurface(const File &file) const
 {
     auto path = file.getPath(filepaths);
-    if (!imageSurfaces.contains(path))
+    if (!assetData.imageData.imageSurfaces.contains(path))
     {
         return nullptr;
     }
-    return imageSurfaces.at(path);
+    return assetData.imageData.imageSurfaces.at(path);
 }
 
-std::optional<Error> AssetManager::loadFile(const fs::path &entry)
+bool AssetManager::loadFile(const fs::path &entry)
 {
-    addPath(entry);
-    std::string ext = entry.extension();
-    if (ext == ".png")
+    if (assetData.loadFile(entry))
     {
-        imageSurfaces[entry.string()] = surf::makeImageSurface(entry);
+        addPath(entry);
+        return true;
     }
-    if (ext == ".wav")
-    {
-    }
-    if (ext == ".ttf")
-    {
-        textData.loadFile(entry);
-    }
-    return std::nullopt;
+    return false;
 }
 
 std::optional<Error> AssetManager::storeTextSurface(const TextSpec &textSpec)
 {
     std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)> surface(nullptr, &SDL_FreeSurface);
-    auto font = textData.getFont(textSpec.fontSpec);
+    auto font = assetData.textData.getFont(textSpec.fontSpec);
     assert(font != nullptr);
     if (font == nullptr)
     {
@@ -98,11 +90,11 @@ std::optional<Error> AssetManager::storeTextSurface(const TextSpec &textSpec)
     {
         return Error("Surface creation failed.");
     }
-    textData.textSurfaces[textSpec] = std::move(surface);
+    assetData.textData.textSurfaces[textSpec] = std::move(surface);
     return std::nullopt;
 }
 
 std::shared_ptr<SDL_Surface> AssetManager::getTextSurface(const TextSpec &textSpec) const
 {
-    return textData.getTextSurface(textSpec);
+    return assetData.textData.getTextSurface(textSpec);
 }
