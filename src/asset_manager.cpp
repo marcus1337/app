@@ -65,11 +65,6 @@ std::shared_ptr<SDL_Surface> AssetManager::getImageSurface(const File &file) con
     return imageSurfaces.at(path);
 }
 
-std::shared_ptr<TTF_Font> AssetManager::getFont(const FontSpec &fontSpec) const
-{
-    return fonts.contains(fontSpec) ? fonts.at(fontSpec) : nullptr;
-}
-
 std::optional<Error> AssetManager::loadFile(const fs::path &entry)
 {
     addPath(entry);
@@ -83,10 +78,7 @@ std::optional<Error> AssetManager::loadFile(const fs::path &entry)
     }
     if (ext == ".ttf")
     {
-        for (const auto &fontSize : {FontSize::Small, FontSize::Medium, FontSize::Large})
-        {
-            fonts[FontSpec{.filename = entry.filename(), .size = fontSize}] = surf::makeFont(entry, static_cast<int>(fontSize));
-        }
+        textData.loadFile(entry);
     }
     return std::nullopt;
 }
@@ -94,7 +86,7 @@ std::optional<Error> AssetManager::loadFile(const fs::path &entry)
 std::optional<Error> AssetManager::storeTextSurface(const TextSpec &textSpec)
 {
     std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)> surface(nullptr, &SDL_FreeSurface);
-    auto font = getFont(textSpec.fontSpec);
+    auto font = textData.getFont(textSpec.fontSpec);
     assert(font != nullptr);
     if (font == nullptr)
     {
@@ -106,11 +98,11 @@ std::optional<Error> AssetManager::storeTextSurface(const TextSpec &textSpec)
     {
         return Error("Surface creation failed.");
     }
-    textSurfaces[textSpec] = std::move(surface);
+    textData.textSurfaces[textSpec] = std::move(surface);
     return std::nullopt;
 }
 
 std::shared_ptr<SDL_Surface> AssetManager::getTextSurface(const TextSpec &textSpec) const
 {
-    return textSurfaces.contains(textSpec) ? textSurfaces.at(textSpec) : nullptr;
+    return textData.getTextSurface(textSpec);
 }

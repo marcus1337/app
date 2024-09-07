@@ -4,6 +4,7 @@
 #include "util/error.h"
 #include "util/file.h"
 #include "render/text_spec.h"
+#include "render/text_data.h"
 
 /*
 AssetManager;
@@ -13,7 +14,6 @@ providing centralized access for other components.
 
 namespace appf
 {
-
     class AssetManager
     {
     public:
@@ -34,12 +34,10 @@ namespace appf
 
         std::optional<Error> loadFile(const std::filesystem::path &entry);
         void addPath(const std::filesystem::path &entry);
-        std::shared_ptr<TTF_Font> getFont(const FontSpec &fontSpec) const;
 
         static inline AssetManager *assetManager = nullptr;
         std::multimap<std::string, std::filesystem::path> filepaths;
         std::map<std::filesystem::path, std::shared_ptr<SDL_Surface>> imageSurfaces;
-        std::map<FontSpec, std::shared_ptr<TTF_Font>> fonts;
-        std::map<TextSpec, std::shared_ptr<SDL_Surface>> textSurfaces;
+        TextData textData;
     };
 }

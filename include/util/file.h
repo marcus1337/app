@@ -3,6 +3,13 @@
 
 namespace appf
 {
+    class FileData
+    {
+    public:
+        virtual void loadFile(const std::filesystem::path &entry) = 0;
+    private:
+    };
+
     struct File
     {
         File(const std::string &filename);
