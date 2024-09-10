@@ -3,15 +3,6 @@
 
 using namespace appf;
 
-ImageData::ImageData() : FileData({".png"})
-{
-}
-
-void ImageData::loadFile(const std::filesystem::path &entry)
-{
-    imageSurfaces[entry.string()] = surf::makeImageSurface(entry);
-}
-
 bool AssetData::loadFile(const std::filesystem::path &entry)
 {
     bool loaded = false;
